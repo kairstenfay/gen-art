@@ -1,0 +1,60 @@
+<style>
+
+    .shiny {
+        position: relative;
+        border-radius: 50%;
+        margin: auto 50%;
+        width: 100px;
+        height: 100px;
+        background: repeating-linear-gradient(
+                45deg,
+                white 0px,
+                black 40px,
+                magenta 40px,
+                cyan 80px
+        );
+    }
+
+    .plate {
+        width: 30px;
+        height: 120px;
+        position: fixed;
+        top: 100px;
+        left: 100px;
+        border-radius: 40%;
+        background: repeating-linear-gradient(
+                90deg,
+                silver 0px,
+                green 20px,
+                green 20px,
+                green 30px
+        );
+    }
+
+    .bar {
+        background: black;
+        width: 250px;
+        height: 10px;
+        position: fixed;
+        top: 155px;
+        left: 130px;
+        border-radius: 5px;
+        background: repeating-linear-gradient(
+                0deg,
+                silver 0px,
+                black 20px,
+                black 20px,
+                black 30px
+        );
+    }
+
+    #lhs {
+        left: 365px;
+    }
+
+</style>
+
+<div class="shiny"></div>
+<div class="plate"></div>
+<div id="lhs" class="plate"></div>
+<div class="bar"></div>
