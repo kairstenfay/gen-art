@@ -25,3 +25,12 @@ a {
 canvas {
     padding: 25px;
 }
+
+code {
+    color: cyan;
+    font-size: 22px;
+}
+
+footer {
+    font-size: 12px;
+}
