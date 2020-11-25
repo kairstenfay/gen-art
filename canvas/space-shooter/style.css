@@ -10,15 +10,12 @@ body {
 
 h1 {
     font-family: 'Goldman', cursive;
-    font-size: 50px;
+    font-size: 65px;
 }
 
 h2 {
     font-family: 'Goldman', cursive;
-}
-
-footer {
-    font-size: 10px;
+    font-size: 40px;
 }
 
 a {
