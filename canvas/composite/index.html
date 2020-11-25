@@ -1,0 +1,25 @@
+<html>
+<head>
+<title>HTML Canvas Deep Dive</title>
+</head>
+<body>
+
+<canvas id="canvas" width="600" height="400"></canvas>
+<script>
+    var can = document.getElementById("canvas");
+    var c = can.getContext('2d');
+
+    c.globalCompositeOperation = "lighter"; //set the blend mode
+    c.fillStyle = "#ff6699";  //fill with pink
+    //randomly draw 50 circles
+    for (var i = 0; i < 50; i++) {
+        c.beginPath();
+        c.arc(
+            Math.random() * 400, // random x
+            Math.random() * 400, // random y
+            40,
+            0, Math.PI * 2);      // full circle
+        c.closePath();
+        c.fill();
+    }
+</script>

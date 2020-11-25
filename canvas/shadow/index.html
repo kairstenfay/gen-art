@@ -1,0 +1,21 @@
+<html>
+<head>
+<title>HTML Canvas Deep Dive</title>
+</head>
+<body>
+
+<canvas id="canvas" width="600" height="400"></canvas>
+<script>
+    var can = document.getElementById("canvas");
+    var c = can.getContext('2d');
+
+    c.fillStyle = "black";
+    c.fillRect(0,0,canvas.width,canvas.height);
+    c.shadowColor = "white";
+    c.shadowOffsetX = 0;
+    c.shadowOffsetY = 0;
+    c.shadowBlur = 30;
+    c.font = 'bold 80pt Arial';
+    c.fillStyle = "#55cc55";
+    c.fillText("ALIEN",30,200);
+</script>

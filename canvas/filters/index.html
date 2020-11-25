@@ -1,0 +1,29 @@
+<html>
+<head>
+<title>HTML Canvas Deep Dive</title>
+</head>
+<body>
+
+<canvas id="canvas" width="800" height="600"></canvas>
+<script>
+    var can = document.getElementById("canvas");
+    var c = can.getContext('2d');
+
+    var img = new Image();
+    img.onload = function() {
+        //draw the image to the canvas
+        c.drawImage(img, 0, 0);
+        //get the canvas data
+        var data = c.getImageData(0, 0, canvas.width, canvas.height);
+        //invert each pixel
+        for(n = 0; n < data.width * data.height; n++) {
+            var index = n*4;
+            data.data[index]   = 255-data.data[index];
+            data.data[index+1] = 255-data.data[index+1];
+            data.data[index+2] = 255-data.data[index+2];
+            //don't touch the alpha
+        }
+        //set the data back
+        c.putImageData(data, 0, 0); }
+        img.src = "./willard_sailing.jpg";
+</script>
