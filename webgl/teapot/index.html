@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<script src='vendor/three.js/build/three.min.js'></script>
+<script src='vendor/three.js/examples/js/controls/OrbitControls.js'></script>
+<div style='position: absolute; top: 0px; width: 100%;font-family:arial; font-weight: bolder; padding-top: 5px;'>
+	<a href="https://github.com/jeromeetienne/threejsboilerplate" target="_blank">Boilerplate</a>
+	for
+	<a href="http://threejs.org" target="_blank">three.js</a>
+	- works on desktop and mobile
+</div><body style='margin: 0px; overflow: hidden; text-align:center;'>
+<script>
+	let renderer, scene, camera, teapot, phongMaterial;
+	const axis = new THREE.Vector3(.5, 1, 0).normalize();
+
+	const init = () => {
+		const width = window.innerWidth;
+		const height = window.innerHeight;
+		const aspect = width / height;
+
+		// init renderer
+		renderer	= new THREE.WebGLRenderer({
+			antialias	: true
+		});
+		renderer.setClearColor(new THREE.Color('lightgrey'), 1)
+		renderer.setSize( width, height );
+		renderer.outputEncoding = THREE.sRGBEncoding;
+		document.body.appendChild( renderer.domElement );
+
+		// init scene and camera
+		scene	= new THREE.Scene();
+		camera	= new THREE.PerspectiveCamera(45, aspect, 1, 80000);
+		camera.position.z = 15;
+		const controls	= new THREE.OrbitControls(camera)
+
+		// LIGHTS
+		ambientLight = new THREE.AmbientLight( 0x333333 );	// 0.2
+		scene.add(ambientLight);
+
+		light = new THREE.DirectionalLight( 0xFFFFFF, 1.0 );
+		scene.add(light);
+
+		// allocate these just once
+		const diffuseColor = new THREE.Color();
+		const specularColor = new THREE.Color();
+		const materialColor = new THREE.Color();
+
+
+		diffuseColor.setHSL( 0.121, 0.73, 0.66 );
+		specularColor.copy( diffuseColor );
+		materialColor.setRGB( .1, 0, .1 );
+
+		new THREE.JSONLoader().load('teapot.js', function(geometry) {
+			phongMaterial = new THREE.MeshPhongMaterial( {
+				color: materialColor, side: THREE.DoubleSide}
+			);
+			const mesh	= new THREE.Mesh( geometry, phongMaterial );
+			scene.add( mesh );
+			teapot = mesh;
+			phongMaterial.shininess = 40.0;
+
+			phongMaterial.color.copy( diffuseColor );
+			phongMaterial.specular.copy( specularColor );
+		});
+
+
+		// handle window resize
+		window.addEventListener('resize', onWindowResize, false);
+
+		animate();
+	}
+
+	const onWindowResize = () => {
+		const width = window.innerWidth;
+		const height = window.innerHeight;
+		const aspect = width / height;
+
+		camera.aspect	= aspect
+		camera.updateProjectionMatrix()
+
+		renderer.setSize( width, height )
+	}
+
+	const animate = () => {
+		requestAnimationFrame(animate);
+		render();
+	}
+
+	const render = () => {
+		renderer.render(scene, camera);
+		if (teapot) teapot.rotateOnAxis(axis, 0.01);
+	}
+
+	init();
+
+</script></body>
