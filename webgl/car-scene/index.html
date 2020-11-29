@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+<div id="loading">
+	<h1>Three.js SkyBoxes</h1>
+	<div>Loading...</div>
+</div>
+
+<style>
+body {
+	margin: 0;
+	height: 100vh;
+	background: #bdc3c7;
+}
+#loading {
+	position: fixed;
+	font-size: 40px;
+	z-index: -1;
+	left: 28%;
+	top: 15%;
+	color: #444;
+	text-align: center;
+}
+</style>
+
+<script src="https://threejs.org/build/three.min.js"></script>
+<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+
+<script>
+	let scene, camera, renderer, skyboxGeo, skybox, controls;
+	let zoomOut = false;
+	let autoRotate = true;
+	let skyboxImage = 'arid';
+
+	const width = window.innerWidth;
+	const height = window.innerHeight;
+	const aspect = width / height;
+
+	function createPathStrings(filename) {
+		const baseFilename = `./images/skybox/${filename}`;
+		const fileType = '.jpg';
+		const sides = ['ft', 'bk', 'up', 'dn', 'rt', 'lf'];
+		const pathStings = sides.map(side => {
+			return baseFilename + '_' + side + fileType;
+		});
+
+		return pathStings;
+	}
+
+	function createMaterialArray(filename) {
+		const skyboxImagepaths = createPathStrings(filename);
+		const materialArray = skyboxImagepaths.map(image => {
+			console.log('loading', image)
+			let texture = new THREE.TextureLoader().load(image);
+
+			return new THREE.MeshBasicMaterial({ map: texture, side: THREE.BackSide });
+		});
+		return materialArray;
+	}
+
+	const init = () => {
+		const size = 10000;
+
+		scene = new THREE.Scene();
+		camera = new THREE.PerspectiveCamera(
+			35,
+			aspect,
+			.1,
+			size
+		);
+		camera.position.set(0, 0, 2);
+
+		renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+		renderer.setSize(width, height);
+		renderer.domElement.id = 'canvas';
+		document.body.appendChild(renderer.domElement);
+
+		const materialArray = createMaterialArray(skyboxImage);
+
+		skyboxGeo = new THREE.BoxGeometry(size, size, size);
+		skybox = new THREE.Mesh(skyboxGeo, materialArray);
+
+		scene.add(skybox);
+
+		const grassTex = new THREE.TextureLoader().load('images/grass.png');
+		grassTex.wrapS = THREE.RepeatWrapping;
+		grassTex.wrapT = THREE.RepeatWrapping;
+		grassTex.repeat.x = 256;
+		grassTex.repeat.y = 256;
+		const groundMat = new THREE.MeshBasicMaterial({map:grassTex});
+
+		const groundGeo = new THREE.PlaneGeometry(400,400);
+		const ground = new THREE.Mesh(groundGeo, groundMat);
+		ground.position.y = -1.9; // lower it
+		ground.rotation.x = -Math.PI/2; // -90 degrees around the xais
+		// IMPORTANT draw on both sides
+		ground.doubleSided = true;
+		scene.add(ground);
+
+		var geometry	= new THREE.TorusGeometry( 1, 0.42 );
+			var material	= new THREE.MeshNormalMaterial();
+			var mesh	= new THREE.Mesh( geometry, material );
+			scene.add( mesh );
+
+		controls = new THREE.OrbitControls(camera, renderer.domElement);
+		controls.enabled = true;
+		controls.minDistance = 700;
+		controls.maxDistance = 1500;
+		controls.autoRotate = true;
+		controls.autoRotateSpeed = 1.0;
+
+		window.addEventListener('resize', onWindowResize, false);
+		animate();
+	}
+
+	const onWindowResize = () => {
+		const width = window.innerWidth;
+		const height = window.innerHeight;
+		const aspect = width / height;
+
+		camera.aspect = aspect;
+
+		camera.updateProjectionMatrix();
+		renderer.setSize(width, height);
+	}
+
+	const animate = () => {
+		controls.autoRotate = autoRotate;
+
+		if (controls.maxDistance == 1500 && zoomOut) {
+			controls.maxDistance = 20000;
+			camera.position.z = 20000;
+		} else if (controls.maxDistance == 20000 && !zoomOut) {
+			controls.maxDistance = 1500;
+			camera.position.z = 2000;
+		}
+
+		controls.update();
+		renderer.render(scene, camera);
+		window.requestAnimationFrame(animate);
+	}
+
+	init();
+
+</script>
+</body>
